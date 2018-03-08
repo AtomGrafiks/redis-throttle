@@ -83,7 +83,8 @@ module Rack
       end
 
       def http_error(request, code, message = nil, headers = {})
-        [code, {'Content-Type' => 'application/json; charset=utf-8'}.merge(headers), {code: 429, error: 'Too Many Requests', message: message || 'Rate limit exceeded'} ]
+        [code, {'Content-Type' => 'text/plain; charset=utf-8'}.merge(headers),
+          [ http_status(code) + (message.nil? ? "\n" : " (#{message})")]]
       end
     end
   end
