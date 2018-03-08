@@ -79,11 +79,11 @@ module Rack
 
       def rate_limit_exceeded(request)
         headers = respond_to?(:retry_after) ? {'Retry-After' => retry_after.to_f.ceil.to_s} : {}
-        http_error(request, options[:code] || 403, (respond_to?(:message) ? message : (options[:message] || 'Rate Limit Exceeded')), headers)
+        http_error(request, options[:code] || 429, (respond_to?(:message) ? message : (options[:message] || 'Rate Limit Exceeded')), headers)
       end
 
       def http_error(request, code, message = nil, headers = {})
-        [code, {'Content-Type' => 'text/plain; charset=utf-8'}.merge(headers),
+        [code, {'Content-Type' => 'application/json; charset=utf-8'}.merge(headers),
           [ http_status(code) + (message.nil? ? "\n" : " (#{message})")]]
       end
     end
